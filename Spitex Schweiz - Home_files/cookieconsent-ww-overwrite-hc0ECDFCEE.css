@@ -1,0 +1,107 @@
+/* 
+Neutrale Farben. Weitere Farbanpassungen werden jeweils bei den Layouts in `cookieconsent.less` gemacht
+*/
+
+/** Light color-scheme **/
+:root {
+  --cc-font-family: inherit;
+  --cc-font-size: inherit;
+  --cc-bg: #fff;
+  --cc-z-index: 2147483647;
+  --cc-text: hsla(0, 0%, 0%, 0.96);
+  --cc-border-radius: 0;
+  --cc-btn-primary-bg: hsla(0, 0%, 0%, 0.75);
+  --cc-btn-primary-text: var(--cc-bg);
+  --cc-btn-primary-hover-bg: hsla(0, 0%, 0%, 0.8);
+  --cc-btn-primary-hover-text: var(--cc-btn-primary-text);
+  --cc-btn-secondary-bg: hsla(0, 0%, 0%, 0.066);
+  --cc-btn-secondary-text: var(--cc-text);
+  --cc-btn-secondary-hover-bg: hsla(0, 0%, 0%, 0.09);
+  --cc-btn-secondary-hover-text: var(--cc-btn-secondary-text);
+  --cc-btn-border-radius: 0;
+  --cc-toggle-bg-off: hsla(0, 0%, 0%, 0.15);
+  --cc-toggle-bg-on: var(--cc-btn-primary-bg);
+  --cc-toggle-bg-readonly: hsla(0, 0%, 0%, 0.08);
+  --cc-toggle-knob-bg: #fff;
+  --cc-toggle-knob-icon-color: var(--cc-toggle-knob-bg);
+  --cc-block-text: var(--cc-text);
+  --cc-cookie-category-block-bg: hsla(0, 0%, 0%, 0.066);
+  --cc-cookie-category-block-bg-hover: hsla(0, 0%, 0%, 0.033);
+  --cc-section-border: hsla(0, 0%, 0%, 0.1);
+  --cc-cookie-table-border: hsla(0, 0%, 0%, 0.01);
+  --cc-overlay-bg: #000;
+  --cc-overlay-opacity: 0.8;
+}
+
+
+#s-bns {
+  height: auto;
+}
+
+/** Fix Querschläger :focus-Zustände mancher Layouts bei Schliessn-Icon **/
+.cc_div .b-bn .exp::before,
+.cc_div .act .b-bn .exp::before {
+  right: auto;
+  bottom: auto;
+}
+
+#s-c-bn::before,
+#s-c-bn::after {
+  right: auto !important;
+  border: none !important;
+}
+
+#c-bns button,
+#s-bns button {
+  border: 1px solid hsla(0, 0%, 0%, .05);
+  line-height: 1.4;
+}
+
+
+
+/* https://ticket.webways.ch/browse/WW-10071 */
+
+.cc_div #s-bns #s-all-bn {
+  --cc-btn-primary-bg: var(--cc-btn-secondary-bg);
+  --cc-btn-primary-text: var(--cc-btn-secondary-text);
+  --cc-btn-primary-hover-bg: var(--cc-btn-secondary-hover-bg);
+  --cc-btn-primary-hover-text: var(--cc-btn-secondary-hover-text);
+}
+
+.cc_div #s-bns #s-sv-bn {
+  --cc-btn-secondary-bg: var(--cc-btn-primary-bg);
+  --cc-btn-secondary-text: var(--cc-btn-primary-text);
+  --cc-btn-secondary-hover-bg: var(--cc-btn-primary-hover-bg);
+  --cc-btn-secondary-hover-text: var(--cc-btn-primary-hover-text);
+}
+
+.cc_div #c-bns #c-p-bn {
+  --cc-btn-primary-bg: var(--cc-btn-secondary-bg);
+  --cc-btn-primary-text: var(--cc-btn-secondary-text);
+  --cc-btn-primary-hover-bg: var(--cc-btn-secondary-hover-bg);
+  --cc-btn-primary-hover-text: var(--cc-btn-secondary-hover-text);
+}
+
+
+.cc_div #s-bns,
+.cc_div #c-bns {
+  display: flex;  
+  justify-content: space-between;
+  gap: 0.5em;
+  min-width: 0;
+}
+
+.cc_div {
+  hyphens: none;
+}
+
+.cc_div .c-bn {
+  flex: 1 1 33%;
+  padding-inline: 1.25em;
+  margin: 0 !important;
+}
+
+#cm.bar #c-inr,
+#cm.bar #c-bns  {
+  max-width: 41em;
+}

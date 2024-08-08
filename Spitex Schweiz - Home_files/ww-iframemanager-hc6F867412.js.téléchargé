@@ -1,0 +1,195 @@
+/*
+	Youtube-Videos, Vimeo-Videos und Google-Maps, die per iframe eingebunden werden müssen vom User freigegeben werden
+	Dazu wird beim accept das Session-Cookie cc-iframe gesetzt.
+	Die Verwaltung der Einstellung kann auch über das Cookie-Consent-Plugin gemacht werden.
+	Daher werden die Einstellungen für die iframes mit Cookie-Consent synchronisiert.
+	Damit die iframe-Einstellung die Session überlebt wird der Wert aus dem Cookie-Consent-Plugin initial übernommen
+*/
+
+// Nach dem Laden der Labels sind wir bereit den iframemanager zu starten
+$.getJSON( '/javascript/plugins/iframemanager.1.2.5/iframemanager-labels.cfm' )
+.done( function( labels ) {
+
+	(function(){
+
+		const im = iframemanager();
+		window.im = im;
+		const lang = document.querySelector('html').getAttribute('lang').toLowerCase();
+
+
+		// Example with youtube embed
+		im.run({
+			currLang: lang,
+			onChange: ( {changedServices, eventSource} ) => {
+				// Die Cookie-Einstellung wird mit CookieConsent dauerhaft persistiert
+				// WW-10080 Fallunterscheidung Video und Google-Map bzw. andere Services
+				if( eventSource.type === 'click' ) {
+					if ( eventSource.action == 'accept' ) {
+						if ( eventSource.service == 'youtube' || eventSource.service == 'vimeo' ) {
+							cc.accept( [...cc.getUserPreferences().accepted_categories, 'iframe'] );
+						} else {
+							cc.accept( [...cc.getUserPreferences().accepted_categories, eventSource.service] );
+						}
+					} else {
+						if ( eventSource.service == 'youtube' || eventSource.service == 'vimeo' ) {
+							cc.accept( cc.getUserPreferences().accepted_categories, 'iframe' );
+						} else {
+							cc.accept( cc.getUserPreferences().accepted_categories, eventSource.service );
+						}
+					}
+				}
+			},
+			services: {
+				youtube: {
+					embedUrl	: 'https://www.youtube-nocookie.com/embed/{data-id}',
+					thumbnailUrl: 'https://i3.ytimg.com/vi/{data-id}/hqdefault.jpg',
+					iframe 		: {
+						allow : 'accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen;'
+					},
+					languages 	: {
+						en: {
+							notice		: labels.youtube.en,
+							loadBtn		: labels.video.loadBtn.en,
+							loadAllBtn	: labels.video.loadAllBtn.en
+						},
+						de: {
+							notice		: labels.youtube.de,
+							loadBtn		: labels.video.loadBtn.de,
+							loadAllBtn	: labels.video.loadAllBtn.de
+						},
+						fr: {
+							notice		: labels.youtube.fr,
+							loadBtn		: labels.video.loadBtn.fr,
+							loadAllBtn	: labels.video.loadAllBtn.fr
+						},
+						it: {
+							notice		: labels.youtube.it,
+							loadBtn		: labels.video.loadBtn.it,
+							loadAllBtn	: labels.video.loadAllBtn.it
+						}
+					},
+					// Wir nutzen überall dasselbe Cookie, was bedeutet, dass, wenn man youtube freigibt auch vimeo und gmap freigegeben werden
+					cookie: {
+						name		: 'cc_iframe',
+						expiration	: 'session'
+					}
+				},
+				vimeo : {
+					embedUrl: 'https://player.vimeo.com/video/{data-id}',
+					//thumbnailUrl: 'https://i3.ytimg.com/vi/{data-id}/hqdefault.jpg',
+					iframe 	: {
+						allow : 'autoplay; fullscreen; picture-in-picture; allow-fullscreen'
+					},
+					languages : {
+						en: {
+							notice		: labels.vimeo.en,
+							loadBtn		: labels.video.loadBtn.en,
+							loadAllBtn	: labels.video.loadAllBtn.en
+						},
+						de: {
+							notice		: labels.vimeo.de,
+							loadBtn		: labels.video.loadBtn.de,
+							loadAllBtn	: labels.video.loadAllBtn.de
+						},
+						fr: {
+							notice		: labels.vimeo.fr,
+							loadBtn		: labels.video.loadBtn.fr,
+							loadAllBtn	: labels.video.loadAllBtn.fr
+						},
+						it: {
+							notice		: labels.vimeo.it,
+							loadBtn		: labels.video.loadBtn.it,
+							loadAllBtn	: labels.video.loadAllBtn.it
+						}
+					},
+					cookie: {
+						name		: 'cc_iframe',
+						expiration	: 'session'
+					}
+				},
+				// TODO: das kommt später
+				googlemaps 	: {
+					embedUrl: 'https://www.google.com/maps/embed?pb={data-id}',
+
+					iframe	: {
+						allow : 'picture-in-picture; fullscreen;'
+					},
+
+					languages : {
+						en: {
+							notice		: 'This content is hosted by a third party. By showing the external content you accept the <a rel="noreferrer noopener" href="https://cloud.google.com/maps-platform/terms" target="_blank">terms and conditions</a> of Google Maps.',
+							loadBtn		: 'Load map',
+							loadAllBtn	: "Don't ask again"
+						},
+						de: {
+							notice		: 'Dieser Inhalt wird von einem Dritten bereitgestellt. Durch die Anzeige des externen Inhalts akzeptieren Sie die <a rel="noreferrer noopener" href="https://cloud.google.com/maps-platform/terms" target="_blank">Bedingungen</a> von youtube.com.',
+							loadBtn		: 'Video anzeigen',
+							loadAllBtn	: 'Nicht mehr fragen'
+						},
+						fr: {
+							notice		: 'Ce contenu est hébergé par un tiers. En affichant le contenu externe, vous acceptez les <a rel="noreferrer noopener" href="https://cloud.google.com/maps-platform/terms" target="_blank">conditions générales</a> de youtube.com.',
+							loadBtn		: 'Voir la vidéo',
+							loadAllBtn	: 'Ne demandez plus'
+						},
+						it: {
+							notice		: 'Questo contenuto è ospitato da una terza parte. Mostrando il contenuto esterno si accettano i <a rel="noreferrer noopener" href="https://cloud.google.com/maps-platform/terms" target="_blank">termini e le condizioni</a> di youtube.com.',
+							loadBtn		: 'Mostra il video',
+							loadAllBtn	: 'Non chiedere altro'
+						}
+					},
+					cookie: {
+						name		: 'cc_iframe',
+						expiration	: 'session'
+					}
+				},
+				gmap: {
+
+					languages : {
+						en: {
+							notice		: labels.gmap.en,
+							loadBtn		: labels.gmap.loadBtn.en,
+							loadAllBtn	: labels.gmap.loadAllBtn.en
+						},
+						de: {
+							notice		: labels.gmap.de,
+							loadBtn		: labels.gmap.loadBtn.de,
+							loadAllBtn	: labels.gmap.loadAllBtn.de
+						},
+						fr: {
+							notice		: labels.gmap.fr,
+							loadBtn		: labels.gmap.loadBtn.fr,
+							loadAllBtn	: labels.gmap.loadAllBtn.fr
+						},
+						it: {
+							notice		: labels.gmap.it,
+							loadBtn		: labels.gmap.loadBtn.it,
+							loadAllBtn	: labels.gmap.loadAllBtn.it
+						}
+					},
+					cookie: {
+						name		: 'cc_gmap',
+						expiration	: 'session',
+						path: '/'
+					}
+				}
+
+
+			}
+		});
+
+		// Einstellung der Berechtigung aus CookieConsent holen
+		if ( cc.allowedCategory( 'iframe' ) ) {
+			im.acceptService( 'all' );
+		} else {
+			im.rejectService( 'all' );
+		}
+		// WW-10080 Googlemap hat einen eigenen Servicenamen
+		if ( cc.allowedCategory( 'gmap' ) ) {
+			im.acceptService( 'gmap' );
+		} else {
+			im.rejectService( 'gmap' );
+		}
+
+	})();
+
+});
